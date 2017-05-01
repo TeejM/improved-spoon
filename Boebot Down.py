@@ -1,11 +1,3 @@
-###########################################################################################
-# Name: Taylor Mathews
-# Date: 4/6/17
-# Description: Adds eight total rooms, four of which are above the first four. Adds a use function and a win condition.
-# Adds a key to unlock a chest which grants a book. This book can be placed in the bookshelves to grant a 6-pack.
-# A statue can be taken and placed on a pedestal to unlock a gate on the second floor. Once unlocked, the player
-# can exit the gate to win the game. Also includes original art as room images.
-###########################################################################################
 from Tkinter import *
 
 # the room class
@@ -107,6 +99,14 @@ class Room(object):
 
         return s
 
+global r1
+global r2
+global r3
+global r4
+global r5
+global r6
+global r7
+global r8
 
 # the game class
 # inherits from the Frame class of Tkinter
@@ -139,15 +139,6 @@ class Game(Frame):
         r6 = Room("Room 6", "room6.gif")
         r7 = Room("Room 7", "room7.gif")
         r8 = Room("Room 8", "room8.gif")
-
-        global r1
-        global r2
-        global r3
-        global r4
-        global r5
-        global r6
-        global r7
-        global r8
 
         # set room 1 as the current room at the beginning of the game
         Game.currentRoom = r1
@@ -191,12 +182,8 @@ class Game(Frame):
 
     # sets the current room image
     def setRoomImage(self):
-        if (Game.currentRoom == None):
-            # if dead, set the skull image
-            Game.img = PhotoImage(file="skull.gif")
-        else:
-            # otherwise grab the image for the current room
-            Game.img = PhotoImage(file=Game.currentRoom.image)
+        # grab the image for the current room
+        Game.img = PhotoImage(file=Game.currentRoom.image)
         # display the image on the left of the GUI
         Game.image.config(image=Game.img)
         Game.image.image = Game.img
@@ -206,15 +193,11 @@ class Game(Frame):
         # enable the text widget, clear it, set it, and disable it
         Game.text.config(state=NORMAL)
         Game.text.delete("1.0", END)
-        if (Game.currentRoom == None):
-            # if dead, let the player know
-            Game.text.insert(END, "You are dead. The only thing you can do now is quit.\n")
-        else:
-            # otherwise, display the appropriate status
-            Game.text.insert(END, str(Game.currentRoom) + \
-                             "\nYou are carrying: " + str(Game.inventory) + \
-                             "\n\n" + status)
-            Game.text.config(state=DISABLED)
+        # display the appropriate status
+        Game.text.insert(END, str(Game.currentRoom) + \
+            "\nYou are carrying: " + str(Game.inventory) + \
+            "\n\n" + status)
+        Game.text.config(state=DISABLED)
 
     # plays the game
     def play(self):
