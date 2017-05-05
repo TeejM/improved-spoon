@@ -4,15 +4,14 @@ from Tkinter import *
 # note that this class is fully implemented with dictionaries as illustrated in the lesson "More on Data Structures"
 class Room(object):
     # the constructor
-    def __init__(self, name, image):
+    def __init__(self, name, image, state=None):
         # rooms have a name, an image (the name of a file), exits (e.g., south), exit locations
         # (e.g., to the south is room n), items (e.g., table), item descriptions (for each item),
         # and grabbables (things that can be taken into inventory)
         self.name = name
         self.image = image
         self.exits = {}
-        self.items = {}
-        self.grabbables = []
+        self.state = state
 
     # getters and setters for the instance variables
     @property
@@ -39,22 +38,6 @@ class Room(object):
     def exits(self, value):
         self._exits = value
 
-    @property
-    def items(self):
-        return self._items
-
-    @items.setter
-    def items(self, value):
-        self._items = value
-
-    @property
-    def grabbables(self):
-        return self._grabbables
-
-    @grabbables.setter
-    def grabbables(self, value):
-        self._grabbables = value
-
     # adds an exit to the room
     # the exit is a string (e.g., north)
     # the room is an instance of a room
@@ -62,41 +45,10 @@ class Room(object):
         # append the exit and room to the appropriate dictionary
         self._exits[exit] = room
 
-    # adds an item to the room
-    # the item is a string (e.g., table)
-    # the desc is a string that describes the item (e.g., it is made of wood)
-    def addItem(self, item, desc):
-        # append the item and description to the appropriate dictionary
-        self._items[item] = desc
-
-    # adds a grabbable item to the room
-    # the item is a string (e.g., key)
-    def addGrabbable(self, item):
-        # append the item to the list
-        self._grabbables.append(item)
-
-    # removes a grabbable item from the room
-    # the item is a string (e.g., key)
-    def delGrabbable(self, item):
-        # remove the item from the list
-        self._grabbables.remove(item)
-
     # returns a string description of the room
     def __str__(self):
         # first, the room name
         s = "You are in {}.\n".format(self.name)
-
-        # next, the items in the room
-        s += "You see: "
-        for item in self.items.keys():
-            s += item + " "
-        s += "\n"
-
-        # next, the exits from the room
-        s += "Exits: "
-        for exit in self.exits.keys():
-            s += exit + " "
-
         return s
 
 global r1
@@ -115,13 +67,6 @@ class Game(Frame):
     def __init__(self, parent):
         # call the constructor in the superclass
         Frame.__init__(self, parent)
-
-    # checks the inventory for an item
-    def checkInventory(self, n):
-        if n in Game.inventory:
-            return True
-        else:
-            return False
 
     # creates the rooms
     def createRooms(self):
@@ -142,8 +87,6 @@ class Game(Frame):
 
         # set room 1 as the current room at the beginning of the game
         Game.currentRoom = r1
-        # initialize the player's inventory
-        Game.inventory = []
 
     # sets up the GUI
     def setupGUI(self):
@@ -157,47 +100,25 @@ class Game(Frame):
         # push it to the bottom of the GUI and let it fill
         # horizontally
         # give it focus so the player doesn't have to click on it
-        Game.player_input = Entry(self, bg="white")
-        Game.player_input.bind("<Return>", self.process)
-        Game.player_input.pack(side=BOTTOM, fill=X)
-        Game.player_input.focus()
+        Game.b1 = Button(self, bg="white", text="Button 1", height=3)
+        Game.b1.grid(row=1, column=0, sticky=W)
+        Game.b2 = Button(self, bg="white", text="Button 2", height=3)
+        Game.b2.grid(row=1, column=1, sticky=W)
         # setup the image to the left of the GUI
         # the widget is a Tkinter Label
         # don't let the image control the widget's size
-        img = None
-        Game.image = Label(self, width=WIDTH / 2, image=img)
+        img = PhotoImage(file="map.gif")
+        Game.image = Label(self, width=WIDTH, height=HEIGHT - 80, image=img)
         Game.image.image = img
-        Game.image.pack(side=LEFT, fill=Y)
-        Game.image.pack_propagate(False)
-        # setup the text to the right of the GUI
-        # first, the frame in which the text will be placed
-        text_frame = Frame(self, width=WIDTH / 2)
-        # the widget is a Tkinter Text
-        # disable it by default
-        # don't let the widget control the frame's size
-        Game.text = Text(text_frame, bg="lightgrey", state=DISABLED)
-        Game.text.pack(fill=Y, expand=1)
-        text_frame.pack(side=RIGHT, fill=Y)
-        text_frame.pack_propagate(False)
+        Game.image.grid(row=0, column=0, columnspan=8, sticky=N)
 
     # sets the current room image
-    def setRoomImage(self):
+    ##### def setRoomImage(self):
         # grab the image for the current room
-        Game.img = PhotoImage(file=Game.currentRoom.image)
+        ##### Game.img = PhotoImage(file=Game.currentRoom.image)
         # display the image on the left of the GUI
-        Game.image.config(image=Game.img)
-        Game.image.image = Game.img
-
-    # sets the status displayed on the right of the GUI
-    def setStatus(self, status):
-        # enable the text widget, clear it, set it, and disable it
-        Game.text.config(state=NORMAL)
-        Game.text.delete("1.0", END)
-        # display the appropriate status
-        Game.text.insert(END, str(Game.currentRoom) + \
-            "\nYou are carrying: " + str(Game.inventory) + \
-            "\n\n" + status)
-        Game.text.config(state=DISABLED)
+        ##### Game.image.config(image=Game.img)
+        ##### Game.image.image = Game.img
 
     # plays the game
     def play(self):
@@ -206,9 +127,7 @@ class Game(Frame):
         # configure the GUI
         self.setupGUI()
         # set the current room
-        self.setRoomImage()
-        # set the current status
-        self.setStatus("")
+        ##### self.setRoomImage()
 
     # processes the player's input
     def process(self, event):
@@ -219,18 +138,7 @@ class Game(Frame):
         # compare the verb and noun to known values
         action = action.lower()
         # set a default response
-        response = "I don't understand. Try verb noun. Valid verbs are go, look, take, and use"
-
-        # exit the game if the player wants to leave (supports quit,
-        # exit, and bye)
-        if (action == "quit" or action == "exit" or action == "bye" or action == "sionara!"):
-            exit(0)
-
-        # if the player is dead if goes/went south from room 4
-        if (Game.currentRoom == None or Game.currentRoom == outside):
-            # clear the player's input
-            Game.player_input.delete(0, END)
-            return
+        response = "Try set high/low or go up/down."
 
         # split the user input into words (words are separated by
         # spaces) and store the words in a list
@@ -255,47 +163,6 @@ class Game(Frame):
                     Game.currentRoom = Game.currentRoom.exits[noun]
                     # set the response (success)
                     response = "Room changed."
-            # the verb is: look
-            elif (verb == "look"):
-                # set a default response
-                response = "I don't see that item."
-
-                # check for valid items in the current room
-                if (noun in Game.currentRoom.items):
-                    # if one is found, set the response to the
-                    # item's description
-                    response = Game.currentRoom.items[noun]
-            # the verb is: take
-            elif (verb == "take"):
-                # set a default response
-                response = "I don't see that item."
-
-                # check for valid grabbable items in the current
-                # room
-                for grabbable in Game.currentRoom.grabbables:
-                    # a valid grabbable item is found
-                    if (noun == grabbable):
-                        # add the grabbable item to the player's
-                        # inventory
-                        Game.inventory.append(grabbable)
-                        # remove the grabbable item from the
-                        # room
-                        Game.currentRoom.delGrabbable(grabbable)
-                        # removes an item from the room if it's also a grabbable
-                        if (grabbable in Game.currentRoom.items):
-                            del Game.currentRoom.items[grabbable]
-                        # set the response (success)
-                        response = "Item grabbed."
-                        # no need to check any more grabbable
-                        # items
-                        break
-            # the verb is: use
-            elif (verb == "use"):
-                # set a default response
-                response = "I can't use that here."
-                if (self.checkInventory(noun) == False):
-                    # returns a message if the player does not have the item
-                    response = "You don't have that."
         # display the response on the right of the GUI
         # display the room's image on the left of the GUI
         # clear the player's input
@@ -307,11 +174,11 @@ class Game(Frame):
 ##########################################################
 # the default size of the GUI is 800x600
 WIDTH = 800
-HEIGHT = 600
+HEIGHT = 480
 
 # create the window
 window = Tk()
-window.title("Room Adventure")
+window.title("Boebot Down!")
 
 # create the GUI as a Tkinter canvas inside the window
 g = Game(window)
