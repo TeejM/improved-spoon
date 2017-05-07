@@ -6,6 +6,12 @@
 import RPi.GPIO as GPIO         
 from random import randint      
 
+
+#Idk if this works sorry if it doesnt
+def setPins():
+	GPIO.output([gpio], HIGH)
+
+
 # function that defines the GPIO pins for the nine output LEDs
 def setGPIO():
 	# define the pins (change these if they are different)
@@ -38,4 +44,6 @@ def display():
 		# otherwise, turn it off
 		else:
 			 GPIO.output(gpio[i], GPIO.LOW)
+				
+
 
