@@ -11,10 +11,6 @@ def setGPIO():
 	# define the pins (change these if they are different)
 	gpio = [26, 19, 13, 6, 5, 22, 27, 17, 4]
 
-# I had my wiring set up identically to the 1st RPi assignment
-# But my LEDs lit backwards for unknown reasons
-# To fix this, please note that I had to reverse the order of my array
-# If the LEDs are backwards, this change would be the cause.
 
 	#set them up as output pins
 	for i in gpio:
@@ -35,9 +31,9 @@ def setNum():
 
 # function that displays the sum (by turning on the appropriate LEDs)
 def display():
-	for i in range (len(sum)):
+	for i in range (len(num)):
 		# if the i-th bit is 1, then turn the i-th LED on
-		if (sum[i] == 1):
+		if (num[i] == 1):
 			GPIO.output(gpio[i], GPIO.HIGH)
 		# otherwise, turn it off
 		else:
