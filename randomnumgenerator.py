@@ -9,7 +9,7 @@ from random import randint
 # function that defines the GPIO pins for the nine output LEDs
 def setGPIO():
 	# define the pins (change these if they are different)
-	gpio = [26, 19, 13, 6, 5, 22, 27, 17, 4]
+	gpio = [26, 19, 13]
 
 
 	#set them up as output pins
@@ -23,7 +23,7 @@ def setNum():
 	# create an empty list to represent the bits
 	num= []
 	# generate eight random bits
-	for i in range(0, 8):
+	for i in range(0, 3):
 		#append a random bit (0 or 1) to the end of the list
 		num.append(randint(0, 1))
 
