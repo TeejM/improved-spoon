@@ -1,3 +1,13 @@
 This folder contains all files necessary to run GUI_Skeleton on IDLE correctly
 
-Button status is tracked in the status 
+Button status is tracked in the setter dictionary; 1 is on, 0 is off. Photo displays correctly
+
+to do:
+	- Make 8 puzzles in photo editting software to be used as a Label
+	- Clean up on/off button photos
+	- Set width size for buttons to be acceptable on the RPi
+	- Test all code on RPi
+	
+	- Implement Arduino features, Serial Features (import GPIO and serial library?)
+	- Combine Random Binary Number with Puzzles
+	- Create Introduction page with Tkinter (import time library?)
