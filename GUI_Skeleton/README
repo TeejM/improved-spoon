@@ -5,7 +5,6 @@ Button status is tracked in the setter dictionary; 1 is on, 0 is off. Photo disp
 to do:
 	- Make 8 puzzles in photo editting software to be used as a Label
 	- Clean up on/off button photos
-	- Set width size for buttons to be acceptable on the RPi
 	- Test all code on RPi
 	
 	- Implement Arduino features, Serial Features (import GPIO and serial library?)
