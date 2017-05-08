@@ -15,7 +15,8 @@ class GUI(Frame):
 		setter = {i : 0 for i in range(BUTTONS) }
 		# Generate each Button; pass in PhotoObject; give toggle() command
 		Buttons = {i : Button(self.master, image=bphoto
-				      , width=100, height=HEIGHT/BUTTONS
+                                      # Consider Buttons as a column; give extra space between rows
+				      , width=WIDTH/10, height=HEIGHT/(BUTTONS+1)
 				      # Pass through required values for toggle() to work
 				      , command=lambda i=i: toggle(i, bphoto, setter, Buttons)
 					)
@@ -29,6 +30,8 @@ class GUI(Frame):
 			Buttons[i].grid(row=i, column=0)
 			# Don't let image define Button size
 			Buttons[i].grid_propagate(False)
+			# Make Buttons rowspan larger if multiple Labels
+			if (ROWS > BUTTONS): Buttons[i].grid(rowspan=ROWS/BUTTONS+1)
 
 	# set up labels
 		columns = [str(c) for c in range(COLUMNS)]
@@ -41,7 +44,8 @@ class GUI(Frame):
 			 }
 		# Create and insert PhotoImage object to each Label
 		label = {k : Label(self.master, image=photo[k]
-				, width=WIDTH/COLUMNS
+                                # Consider Buttons as a column
+				, width=(WIDTH-WIDTH/10)/COLUMNS
 				, height=HEIGHT/ROWS
 				 )
 				# Share each PhotoObject key with each Label object
@@ -52,12 +56,11 @@ class GUI(Frame):
 			label[k].image = photo[k]
 			# Assign row going down then column going right with enumerate
 			label[k].grid(row=n%len(rows)
-				      , column=n/len(rows)%len(columns)+1
-				      # Make Labels rowspan larger if multiple Buttons
-				      , rowspan=len(Buttons)/len(rows)
-				      )
+				      , column=n/len(rows)%len(columns)+1				      )
 			# Don't let image define Label size
 			label[k].grid_propagate(False)
+			# Make Labels rowspan larger if multiple Buttons
+			if (BUTTONS > ROWS): label[k].grid(rowspan=BUTTONS/ROWS)
 			
 # Toggle accepts the shared key, bphoto, setter, and Buttons 
 def toggle(i, bphoto, setter, Buttons):
@@ -78,7 +81,13 @@ def toggle(i, bphoto, setter, Buttons):
 
 # Run Tkinter
 window = Tk()
+# Figure out screen dimensions
+w, h = window.winfo_screenwidth(), window.winfo_screenheight()
+# Make window full screen
+window.overrideredirect(1)
+# Press Escape to exit window
+window.bind("<Escape>", lambda e:e.widget.quit())
 frame = GUI(window)
 ''' input for each puzzle formatted as set_up_GUI(BUTTONS, COLUMNS, ROWS, WIDTH, HEIGHT)'''
-frame.set_up_GUI(8,1,1,800,480)
+frame.set_up_GUI(8,1,1,w,h)
 window.mainloop()
