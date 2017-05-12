@@ -1,10 +1,20 @@
 from Tkinter import *
-# import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 from random import randint
 import serial
 
-# GPIO.setmode(GPIO.BCM)
-# GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+# GPIO pins to use
+gpio = [18, 23, 24]
+# Sets the pins as output
+for i in gpio:
+    GPIO.setup(i, GPIO.OUT)
+# Turns all pins on initially
+GPIO.output(gpio[0], 1)
+GPIO.output(gpio[1], 1)
+GPIO.output(gpio[2], 0)
+
 HEIGHT = 440
 WIDTH = 660
 
@@ -22,9 +32,10 @@ class Game(Frame):
         self.master.maxsize(width=WIDTH, height=HEIGHT)
         # Initial text label and button to display
         self.text = Label(self.master, text="Congratulations on being selected for the job! \n"
-                                            + "Our Boebot has broken down and you must repair it! \n"
+                                            + "Our Boebot has broken down and you must repair it! \n\n"
                                             + "Your task is to complete the following logic circuits by turning the available inputs on or off. \n"
-                                            + "After you make your selections, press 'ENTER' to check your answer and proceed to the next puzzle",
+                                            + "After you make your selections, press 'ENTER' to check your answer and proceed to the next puzzle. \n\n"
+                                            + "By default, the LEDs are set to 6. Remember this, as it will be important later.",
                           font=("Comic Sans MS", 16), wraplength=WIDTH - 20)
         self.text.pack(side=TOP)
         # Binds the setupGUI method to the button
@@ -112,15 +123,6 @@ class Game(Frame):
             self.genRandom()
     # Generates a random decimal number and displays it in binary using LEDs
     def genRandom(self):
-        # GPIO pins to use
-        gpio = [18, 23, 24]
-        # Sets the pins as output
-        for i in gpio:
-            GPIO.setup(i, GPIO.OUT)
-        # Turns all pins on initially
-        GPIO.output(gpio[0], 1)
-        GPIO.output(gpio[1], 1)
-        GPIO.output(gpio[2], 1)
         # Generates a random integer from 0 to 5 inclusive
         num = randint(0, 5)
         # Turns certain LEDs on depending on the number generated
