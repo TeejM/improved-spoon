@@ -139,6 +139,6 @@ window = Tk()
 # Figure out screen dimensions
 w, h = window.winfo_screenwidth(), window.winfo_screenheight()
 # Make window full screen
-window.overrideredirect(1)
+# window.overrideredirect(1)
 frame = Game(window)
 window.mainloop()
