@@ -1,7 +1,6 @@
 from Tkinter import *
 import RPi.GPIO as GPIO
 from random import randint
-import serial
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
@@ -124,7 +123,7 @@ class Game(Frame):
     # Generates a random decimal number and displays it in binary using LEDs
     def genRandom(self):
         # Generates a random integer from 0 to 5 inclusive
-        num = randint(0, 5)
+        num = randint(4, 4)
         # Turns certain LEDs on depending on the number generated
         if (num == 0):
             GPIO.output(gpio[0], 0)
@@ -152,6 +151,7 @@ class Game(Frame):
             GPIO.output(gpio[2], 1)
     # Quits the program, currently configured to Escape in the constructor
     def quit(self, event):
+        GPIO.cleanup()
         self.master.destroy()
 # Toggle accepts the shared key, bphoto, setter, and Buttons 
 def toggle(i, bphoto, setter, Buttons):
